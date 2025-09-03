@@ -5,17 +5,37 @@ import {
   Typography,
   Stack,
   useMediaQuery,
+  Button,
 } from "@mui/material";
 import { useTheme } from "@mui/material/styles";
+import KeyboardArrowDownRoundedIcon from "@mui/icons-material/KeyboardArrowDownRounded";
+import { smoothScrollToEl, smoothScrollToY } from "../utils/smoothScroll";
 
 export default function BlackIntroSection() {
   const theme = useTheme();
   const reduce = useMediaQuery("(prefers-reduced-motion: reduce)");
   const ref = React.useRef(null);
-
   const [reveal, setReveal] = React.useState(false);
   const [currentChip, setCurrentChip] = React.useState(-1);
   const [maxLitChip, setMaxLitChip] = React.useState(-1);
+
+  const handleContinue = React.useCallback(() => {
+    const DURATION = 2200;
+    const el = document.getElementById("after-black-intro");
+    const root = document.documentElement;
+    const prevScrollBehavior = root.style.scrollBehavior;
+    root.style.scrollBehavior = "auto";
+    if (el) {
+      smoothScrollToEl(el, { duration: DURATION, offset: 0 });
+    } else {
+      const targetY =
+        (window.scrollY || window.pageYOffset) + window.innerHeight;
+      smoothScrollToY(targetY, { duration: DURATION });
+    }
+    window.setTimeout(() => {
+      root.style.scrollBehavior = prevScrollBehavior;
+    }, DURATION + 50);
+  }, []);
 
   React.useEffect(() => {
     const el = ref.current;
@@ -35,31 +55,26 @@ export default function BlackIntroSection() {
 
   React.useEffect(() => {
     if (!reveal) return;
-
-    const totalChips = 5; // <-- make sure this matches your number of ChipGlow items
+    const totalChips = 5;
     if (reduce) {
       setCurrentChip(totalChips - 1);
       setMaxLitChip(totalChips - 1);
       return;
     }
-
-    const startDelay = 1000; // initial pause before the first chip
-    const stepDelay = 2700; // gap between chips
-
+    const startDelay = 1000;
+    const stepDelay = 700;
     const timers = [];
     for (let k = 0; k < totalChips; k++) {
-      timers.push(
-        setTimeout(() => {
-          setCurrentChip(k); // the one that pulses now
-          setMaxLitChip((prev) => Math.max(prev, k)); // once lit, stays lit
-        }, startDelay + k * stepDelay)
-      );
+      const id = setTimeout(() => {
+        setCurrentChip(k);
+        setMaxLitChip((prev) => Math.max(prev, k));
+      }, startDelay + k * stepDelay);
+      timers.push(id);
     }
-
     return () => timers.forEach(clearTimeout);
   }, [reveal, reduce]);
 
-  const chipColor = theme.palette.secondary?.light || "#60ad5e";
+  const chipColor = theme.palette.secondary?.main || "#60ad5e";
 
   return (
     <Box
@@ -71,12 +86,7 @@ export default function BlackIntroSection() {
         bgcolor: "common.black",
         color: "common.white",
         overflow: "hidden",
-        clipPath: reveal ? "circle(140% at 50% 86%)" : "circle(0% at 50% 86%)",
-        WebkitClipPath: reveal
-          ? "circle(140% at 50% 86%)"
-          : "circle(0% at 50% 86%)",
-        transition:
-          "clip-path 1100ms cubic-bezier(.22,.61,.36,1), -webkit-clip-path 1100ms cubic-bezier(.22,.61,.36,1)",
+        // Removed the ::before circle takeover effect
         "&::after": {
           content: '""',
           position: "absolute",
@@ -86,17 +96,14 @@ export default function BlackIntroSection() {
           backgroundImage:
             "radial-gradient(rgba(255,255,255,0.08) 1px, transparent 1px)",
           backgroundSize: "18px 18px",
-          animation: "pan 24s linear infinite",
+          animation: reduce ? "none" : "pan 24s linear infinite",
           maskImage:
             "linear-gradient(to bottom, transparent, #000 18%, #000 82%, transparent)",
           WebkitMaskImage:
             "linear-gradient(to bottom, transparent, #000 18%, #000 82%, transparent)",
         },
+        // Removed @keyframes rippleExpand
         "@keyframes pan": { to: { backgroundPosition: "0 100%" } },
-        "@media (prefers-reduced-motion: reduce)": {
-          transition: "none",
-          "&::after": { animation: "none" },
-        },
       }}
     >
       <Container
@@ -117,7 +124,6 @@ export default function BlackIntroSection() {
           >
             About FieldLab
           </Typography>
-
           <Typography
             sx={{
               fontSize: "clamp(18px, 2.1vw, 28px)",
@@ -126,7 +132,7 @@ export default function BlackIntroSection() {
               px: { xs: 1, sm: 2 },
               opacity: 0,
               transform: "translateY(8px)",
-              animation: reveal ? "fadeUp 900ms 280ms ease forwards" : "none",
+              animation: reveal ? "fadeUp 900ms 420ms ease forwards" : "none",
               "@keyframes fadeUp": {
                 to: { opacity: 1, transform: "translateY(0)" },
               },
@@ -180,6 +186,56 @@ export default function BlackIntroSection() {
           </Typography>
         </Stack>
       </Container>
+
+      <Box
+        sx={{
+          position: "absolute",
+          left: 0,
+          right: 0,
+          bottom: { xs: 12, sm: 20 },
+          display: "flex",
+          justifyContent: "center",
+          zIndex: 2,
+        }}
+      >
+        <Button
+          onClick={handleContinue}
+          aria-label="Continue"
+          variant="text"
+          disableRipple
+          sx={{
+            animation: reduce ? "none" : "revealText 10s ease forwards",
+            "@keyframes revealText": {
+              from: { transform: "translateY(100%)", opacity: 0 },
+              to: { transform: "translateY(0%)", opacity: 1 },
+            },
+            gap: 1,
+            alignItems: "center",
+            color: "common.white",
+            textTransform: "none",
+            px: 1,
+            minWidth: 0,
+            opacity: 0.9,
+            "&:hover": { bgcolor: "transparent", opacity: 1 },
+            fontSize: "clamp(11px, 1.2vw, 14px)",
+            ".arrow": {
+              animation: reduce ? "none" : "bounceY 1.8s ease-in-out infinite",
+            },
+            "@keyframes bounceY": {
+              "0%,100%": { transform: "translateY(0)" },
+              "50%": { transform: "translateY(4px)" },
+            },
+          }}
+        >
+          <KeyboardArrowDownRoundedIcon
+            className="arrow"
+            sx={{ fontSize: "1.4em" }}
+          />
+          <Typography component="span" sx={{ lineHeight: 1 }}>
+            Continue
+          </Typography>
+        </Button>
+      </Box>
     </Box>
   );
 }
@@ -253,6 +309,7 @@ function rgba(hexOrColor, alpha) {
   }
   return `rgba(255,255,255,${alpha})`;
 }
+
 function hexToRgb(hex) {
   let h = hex.replace("#", "");
   if (h.length === 3) h = [...h].map((c) => c + c).join("");
