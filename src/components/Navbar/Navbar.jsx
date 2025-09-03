@@ -147,7 +147,7 @@ export default function Navbar() {
               rowGap: { xs: 0.5, sm: 0.75 },
             }}
           >
-            <NavLink>Home</NavLink>
+            <NavLink>About</NavLink>
             <NavLink>Fields</NavLink>
             <NavLink>Technology</NavLink>
             <NavLink>Contact</NavLink>
