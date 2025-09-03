@@ -16,8 +16,6 @@ import Navbar from "../Navbar/Navbar";
 
 //util
 import { smoothScrollToEl } from "../../utils/smoothScroll";
-import BlackIntroSection from "../blackIntroSection";
-// import SensorGridConnect from "../SensorGridConnect";
 
 function Hero() {
   // Smooth scroll to next section
@@ -206,8 +204,6 @@ function Hero() {
           </Button>
         </Box>
       </Box>
-      <BlackIntroSection id="next-section" />
-      {/* <SensorGridConnect id="next-section" /> */}
     </>
   );
 }
