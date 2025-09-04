@@ -12,12 +12,15 @@ import { useTheme } from "@mui/material/styles";
 import phenodeImg from "../assets/tech/phenode.webp";
 import sensorsImg from "../assets/tech/sensors.webp";
 import fieldDockImg from "../assets/tech/fielddock.webp";
+import rhizoImg from "../assets/tech/minirhizo.webp";
+
+// ----------------------------------------------------------------------
 
 export default function TechShowcase() {
   const theme = useTheme();
   const reduce = useMediaQuery("(prefers-reduced-motion: reduce)");
-  const isSmUp = useMediaQuery(theme.breakpoints.up("sm")); // NEW
-  const [active, setActive] = React.useState(-1); // none pre-hovered
+  const isSmUp = useMediaQuery(theme.breakpoints.up("sm"));
+  const [active, setActive] = React.useState(0); // first orb card pre-hovered, -1 makes none active
 
   // Reset the active image when we drop below the breakpoint (stacked column)
   React.useEffect(() => {
@@ -55,6 +58,8 @@ export default function TechShowcase() {
       ? { src: sensorsImg, alt: "Wireless soil & environment sensors" }
       : active === 2
       ? { src: fieldDockImg, alt: "FieldDock gateway" }
+      : active === 3
+      ? { src: rhizoImg, alt: "Minirhizotron imaging" }
       : null
     : null;
 
