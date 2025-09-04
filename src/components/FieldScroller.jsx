@@ -1,4 +1,5 @@
 import * as React from "react";
+import { useNavigate } from "react-router-dom";
 import {
   Box,
   Container,
@@ -21,6 +22,7 @@ export default function FieldScroller() {
   const STEPS = [
     {
       key: "hpi",
+      href: "/fields/hpi",
       label: "HPI Sorghum Diversity Trial",
       overline: "HPI — Genetic Diversity",
       summary:
@@ -35,6 +37,7 @@ export default function FieldScroller() {
     },
     {
       key: "climate",
+      href: "/fields/climate-smart",
       label: "Climate Smart Field",
       overline: "Sorghum × Maize × Practices",
       summary:
@@ -129,6 +132,7 @@ export default function FieldScroller() {
               {STEPS.map((s, i) => (
                 <StepCard
                   key={s.key}
+                  href={s.href}
                   overline={s.overline}
                   title={s.label}
                   summary={s.summary}
@@ -205,6 +209,7 @@ function SectionHeader({
 
 function StepCard({
   overline,
+  href,
   title,
   summary,
   bullets,
@@ -213,6 +218,14 @@ function StepCard({
   delay = 0,
   reduceMotion = false,
 }) {
+  const navigate = useNavigate();
+
+  const handleClick = (e) => {
+    if (!href) return;
+    e.preventDefault();
+    navigate(href);
+  };
+
   return (
     <Box
       tabIndex={0} // allow keyboard focus
@@ -287,9 +300,8 @@ function StepCard({
           - xs/sm: spans the full bottom of the card *inside* the padding (left/right match p)
           - md+: compact button anchored bottom-right */}
       <Button
-        component="a"
-        href="#"
-        onClick={(e) => e.preventDefault()}
+        href={href}
+        onClick={handleClick}
         aria-label={`Learn more about ${title}`}
         sx={(theme) => ({
           position: "absolute",
@@ -336,7 +348,7 @@ function StepCard({
             borderColor: theme.palette.secondary.light,
             transform: "translateY(-1px)",
             boxShadow:
-              "0 0 0 0px rgba(96,173,94,0.28), 0 12px 28px rgba(96,173,94,0.35)",
+              "0 0 0 0px rgba(96,173,94,0.28), 0 12px 28px rgba(96,173,94,0.20)",
           },
           "&:focus-visible": {
             outline: "none",
