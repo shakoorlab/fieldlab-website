@@ -17,10 +17,10 @@ function Home() {
       <Hero />
       <BlackIntroSection id="next-section" />
       <FieldScroller id="after-black-intro" />
-      <TechShowcase />
-      <DataFlowPath />
-      <FitMatrix />
-      <FooterCTA />
+      <TechShowcase id="technology" />
+      <DataFlowPath id="dataflow" />
+      <FitMatrix id="fit" />
+      <FooterCTA id="contact" />
     </>
   );
 }

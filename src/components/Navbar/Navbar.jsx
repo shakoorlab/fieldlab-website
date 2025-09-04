@@ -1,4 +1,5 @@
 import * as React from "react";
+import { Link as RouterLink } from "react-router-dom";
 
 import {
   Container,
@@ -7,7 +8,6 @@ import {
   Stack,
   Button,
   Slide,
-  useScrollTrigger,
 } from "@mui/material";
 
 import logoIcon from "../../assets/logo_icon.png";
@@ -37,8 +37,9 @@ function HideOnScroll({ children }) {
   );
 }
 
-const NavLink = ({ children, href = "#" }) => (
+const NavLink = ({ children, href = "/" }) => (
   <Button
+    component="a"
     href={href}
     variant="text"
     size="small"
@@ -84,8 +85,8 @@ export default function Navbar() {
         >
           {/* Brand (icon + text) */}
           <Box
-            component="a"
-            href="/"
+            component={RouterLink}
+            to="/"
             aria-label="FieldLab home"
             sx={{
               display: "inline-flex",
@@ -147,10 +148,10 @@ export default function Navbar() {
               rowGap: { xs: 0.5, sm: 0.75 },
             }}
           >
-            <NavLink>About</NavLink>
-            <NavLink>Fields</NavLink>
-            <NavLink>Technology</NavLink>
-            <NavLink>Contact</NavLink>
+            <NavLink href="/#next-section">About</NavLink>
+            <NavLink href="/#after-black-intro">Fields</NavLink>
+            <NavLink href="/#technology">Technology</NavLink>
+            <NavLink href="/#contact">Contact</NavLink>
           </Stack>
         </Box>
       </HideOnScroll>
