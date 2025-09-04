@@ -10,7 +10,7 @@ import {
 } from "@mui/material";
 
 import KeyboardArrowDownRoundedIcon from "@mui/icons-material/KeyboardArrowDownRounded";
-import hero from "../../assets/hero.webp";
+import hero from "../../assets/Hero.webp";
 
 import Navbar from "../Navbar/Navbar";
 
