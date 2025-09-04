@@ -5,7 +5,7 @@ import FieldScroller from "./components/FieldScroller";
 import TechShowcase from "./components/TechShowcase";
 import DataFlowPath from "./components/DataFlowPath";
 import FitMatrix from "./components/FitMatrix";
-import BlackIntroSection from "./components/blackIntroSection";
+import BlackIntroSection from "./components/BlackIntroSection";
 import { FooterCTA } from "./components/FooterCTA";
 import ClimateSmart from "./components/Fields/Climate_Smart/ClimateSmart";
 import HPI from "./components/Fields/HPI/HPI";
