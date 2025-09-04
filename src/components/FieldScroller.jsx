@@ -79,7 +79,7 @@ export default function FieldScroller() {
 
   return (
     <Box
-      id="fields"
+      id="after-black-intro"
       sx={{
         position: "relative",
         bgcolor: "black",

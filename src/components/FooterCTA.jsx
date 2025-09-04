@@ -7,6 +7,7 @@ export function FooterCTA() {
 
   return (
     <Box
+      id="contact"
       sx={{
         position: "relative",
         bgcolor: "black",
