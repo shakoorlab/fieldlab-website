@@ -43,15 +43,21 @@ export function FooterCTA() {
             with real data.
           </Typography>
           <Stack direction="row" spacing={2} sx={{ mt: 1 }}>
-            <Button variant="contained" color="secondary">
+            <Button
+              variant="contained"
+              color="secondary"
+              href="mailto:shakoorlab.danforth@gmail.com"
+              target="_blank" // try to open in a separate tab/window
+              rel="noopener noreferrer" // security best practice when using _blank
+            >
               Request a field tour
             </Button>
-            <Button
+            {/* <Button
               variant="outlined"
               sx={{ color: "white", borderColor: "rgba(255,255,255,0.4)" }}
             >
               Download site brief
-            </Button>
+            </Button> */}
           </Stack>
         </Stack>
       </Container>

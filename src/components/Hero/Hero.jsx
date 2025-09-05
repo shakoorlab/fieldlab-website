@@ -105,6 +105,10 @@ function Hero() {
 
             <Stack direction="row" spacing={2}>
               <Button
+                component="a"
+                href="mailto:shakoorlab.danforth@gmail.com"
+                target="_blank" // try to open in a separate tab/window
+                rel="noopener noreferrer" // security best practice when using _blank
                 variant="contained"
                 color="secondary"
                 sx={{
@@ -117,7 +121,11 @@ function Hero() {
               >
                 Partner With Us
               </Button>
+
               <Button
+                href="https://www.shakoorlab.com"
+                target="_blank" // open in new tab (remove if you want same tab)
+                rel="noopener noreferrer" // security best practice for _blank
                 variant="outlined"
                 color="secondary"
                 sx={{
@@ -128,7 +136,7 @@ function Hero() {
                   },
                 }}
               >
-                Learn More
+                About Us
               </Button>
             </Stack>
 
