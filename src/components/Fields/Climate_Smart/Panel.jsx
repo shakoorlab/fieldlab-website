@@ -14,6 +14,7 @@ import { useTheme } from "@mui/material/styles";
 export default function ClimateSmartPanel() {
   const theme = useTheme();
   const reduce = useMediaQuery("(prefers-reduced-motion: reduce)");
+  const isMdUp = useMediaQuery(theme.breakpoints.up("md"));
 
   const tags = [
     "No-till",
@@ -66,69 +67,71 @@ export default function ClimateSmartPanel() {
         "@keyframes pan": { to: { backgroundPosition: "0 100%" } },
       }}
     >
-      {/* Top-left Back button */}
-      <Button
-        component="a"
-        href="#"
-        onClick={handleBack}
-        aria-label="Go back to previous page"
-        sx={(theme) => ({
-          position: "absolute",
-          zIndex: 2,
+      {/* Top-left Back button, does not render under the md breakpoint*/}
+      {isMdUp && (
+        <Button
+          component="a"
+          href="#"
+          onClick={handleBack}
+          aria-label="Go back to previous page"
+          sx={(theme) => ({
+            position: "absolute",
+            zIndex: 2,
 
-          top: {
-            xs: theme.spacing(2.5),
-            sm: theme.spacing(3),
-            md: theme.spacing(3),
-          },
-          left: {
-            xs: theme.spacing(2.5),
-            sm: theme.spacing(3),
-            md: theme.spacing(3),
-          },
+            top: {
+              xs: theme.spacing(2.5),
+              sm: theme.spacing(3),
+              md: theme.spacing(3),
+            },
+            left: {
+              xs: theme.spacing(2.5),
+              sm: theme.spacing(3),
+              md: theme.spacing(3),
+            },
 
-          px: { xs: 1.5, sm: 2, md: 2.5 },
-          py: { xs: 1, sm: 1, md: 1 },
-          fontSize: { xs: 14, sm: 15, md: 16 },
-          letterSpacing: { xs: "0.2px", sm: "0.3px", md: "0.3px" },
+            px: { xs: 1.5, sm: 2, md: 2.5 },
+            py: { xs: 1, sm: 1, md: 1 },
+            fontSize: { xs: 14, sm: 15, md: 16 },
+            letterSpacing: { xs: "0.2px", sm: "0.3px", md: "0.3px" },
 
-          color: "common.white",
-          background:
-            "linear-gradient(90deg, rgba(96,173,94,0.35) 0%, rgba(96,173,94,0.55) 100%)",
-          border: "1px solid rgba(96,173,94,0.65)",
-          boxShadow: "0 0 0 0 rgba(96,173,94,0)",
-          textTransform: "none",
-          transition: theme.transitions.create(
-            ["transform", "box-shadow", "background-color", "border-color"],
-            { duration: 250 }
-          ),
-
-          minHeight: 44,
-          textAlign: "center",
-
-          "&:hover": {
+            color: "common.white",
             background:
-              "linear-gradient(90deg, rgba(96,173,94,0.55) 0%, rgba(96,173,94,0.75) 100%)",
-            borderColor: theme.palette.secondary.light,
-            transform: "translateY(-1px)",
-            boxShadow:
-              "0 0 0 0px rgba(96,173,94,0.28), 0 12px 28px rgba(96,173,94,0.20)",
-          },
-          "&:focus-visible": {
-            outline: "none",
-            boxShadow:
-              "0 0 0 10px rgba(96,173,94,0.28), 0 12px 28px rgba(96,173,94,0.35)",
-            borderColor: theme.palette.secondary.light,
-          },
-          "&:active": {
-            transform: "translateY(0)",
-            boxShadow:
-              "0 0 0 6px rgba(96,173,94,0.18), 0 8px 18px rgba(96,173,94,0.28)",
-          },
-        })}
-      >
-        Back
-      </Button>
+              "linear-gradient(90deg, rgba(96,173,94,0.35) 0%, rgba(96,173,94,0.55) 100%)",
+            border: "1px solid rgba(96,173,94,0.65)",
+            boxShadow: "0 0 0 0 rgba(96,173,94,0)",
+            textTransform: "none",
+            transition: theme.transitions.create(
+              ["transform", "box-shadow", "background-color", "border-color"],
+              { duration: 250 }
+            ),
+
+            minHeight: 44,
+            textAlign: "center",
+
+            "&:hover": {
+              background:
+                "linear-gradient(90deg, rgba(96,173,94,0.55) 0%, rgba(96,173,94,0.75) 100%)",
+              borderColor: theme.palette.secondary.light,
+              transform: "translateY(-1px)",
+              boxShadow:
+                "0 0 0 0px rgba(96,173,94,0.28), 0 12px 28px rgba(96,173,94,0.20)",
+            },
+            "&:focus-visible": {
+              outline: "none",
+              boxShadow:
+                "0 0 0 10px rgba(96,173,94,0.28), 0 12px 28px rgba(96,173,94,0.35)",
+              borderColor: theme.palette.secondary.light,
+            },
+            "&:active": {
+              transform: "translateY(0)",
+              boxShadow:
+                "0 0 0 6px rgba(96,173,94,0.18), 0 8px 18px rgba(96,173,94,0.28)",
+            },
+          })}
+        >
+          Back
+        </Button>
+      )}
 
       <Container>
         {/* Header */}
