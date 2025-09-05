@@ -207,32 +207,6 @@ export default function FieldMediaGallery() {
         "@keyframes pan": { to: { backgroundPosition: "0 100%" } },
       }}
     >
-      {/* Top-left Back button (md and up only) */}
-      {isMdUp && (
-        <Button
-          component="a"
-          href="#"
-          onClick={handleBack}
-          aria-label="Go back to previous page"
-          sx={(theme) => ({
-            position: "absolute",
-            top: {
-              xs: theme.spacing(2.5),
-              sm: theme.spacing(3),
-              md: theme.spacing(3),
-            },
-            left: {
-              xs: theme.spacing(2.5),
-              sm: theme.spacing(3),
-              md: theme.spacing(3),
-            },
-            ...backButtonBaseSx(theme),
-          })}
-        >
-          Back
-        </Button>
-      )}
-
       <Container>
         {/* Header */}
         <Stack
