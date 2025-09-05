@@ -6,6 +6,7 @@ import {
   Stack,
   Modal,
   ButtonBase,
+  Button,
   useMediaQuery,
 } from "@mui/material";
 import { useTheme } from "@mui/material/styles";
@@ -25,12 +26,15 @@ import HPI12 from "../../../assets/gallery/HPI/HPI12.webp";
 
 /**
  * Responsive masonry + lightbox gallery for mixed photos/videos.
+ * - Back button shows at top-left on md+.
+ * - On xs/sm, a full-width sticky bottom Back button appears.
  */
 
 export default function FieldMediaGallery() {
   const theme = useTheme();
   const reduce = useMediaQuery("(prefers-reduced-motion: reduce)");
   const isSmUp = useMediaQuery(theme.breakpoints.up("sm"));
+  const isMdUp = useMediaQuery(theme.breakpoints.up("md"));
 
   const MEDIA = [
     {
@@ -113,6 +117,15 @@ export default function FieldMediaGallery() {
   const next = () => setOpenIdx((i) => (i + 1) % MEDIA.length);
   const prev = () => setOpenIdx((i) => (i - 1 + MEDIA.length) % MEDIA.length);
 
+  // Back button behavior
+  const handleBack = React.useCallback((e) => {
+    e.preventDefault();
+    if (typeof window !== "undefined") {
+      if (window.history.length > 1) window.history.back();
+      else window.location.assign("/");
+    }
+  }, []);
+
   // Keyboard controls when lightbox is open
   React.useEffect(() => {
     if (openIdx < 0) return;
@@ -125,6 +138,46 @@ export default function FieldMediaGallery() {
     return () => window.removeEventListener("keydown", onKey);
   }, [openIdx]);
 
+  // Base styling for the green "Back" button
+  const backButtonBaseSx = (theme) => ({
+    zIndex: 2,
+    px: { xs: 1.5, sm: 2, md: 2.5 },
+    py: { xs: 1, sm: 1, md: 1 },
+    fontSize: { xs: 14, sm: 15, md: 16 },
+    letterSpacing: { xs: "0.2px", sm: "0.3px", md: "0.3px" },
+    color: "common.white",
+    background:
+      "linear-gradient(90deg, rgba(96,173,94,0.35) 0%, rgba(96,173,94,0.55) 100%)",
+    border: "1px solid rgba(96,173,94,0.65)",
+    boxShadow: "0 0 0 0 rgba(96,173,94,0)",
+    textTransform: "none",
+    transition: theme.transitions.create(
+      ["transform", "box-shadow", "background-color", "border-color"],
+      { duration: 250 }
+    ),
+    minHeight: 44,
+    textAlign: "center",
+    "&:hover": {
+      background:
+        "linear-gradient(90deg, rgba(96,173,94,0.55) 0%, rgba(96,173,94,0.75) 100%)",
+      borderColor: theme.palette.secondary.light,
+      transform: "translateY(-1px)",
+      boxShadow:
+        "0 0 0 0px rgba(96,173,94,0.28), 0 12px 28px rgba(96,173,94,0.20)",
+    },
+    "&:focus-visible": {
+      outline: "none",
+      boxShadow:
+        "0 0 0 10px rgba(96,173,94,0.28), 0 12px 28px rgba(96,173,94,0.35)",
+      borderColor: theme.palette.secondary.light,
+    },
+    "&:active": {
+      transform: "translateY(0)",
+      boxShadow:
+        "0 0 0 6px rgba(96,173,94,0.18), 0 8px 18px rgba(96,173,94,0.28)",
+    },
+  });
+
   return (
     <Box
       id="gallery"
@@ -133,6 +186,8 @@ export default function FieldMediaGallery() {
         bgcolor: "common.black",
         color: "common.white",
         py: { xs: 8, md: 12 },
+        // Add safe space at bottom on xs/sm so the sticky bar won't cover content
+        pb: { xs: 14, sm: 14, md: 12 },
         overflow: "hidden",
         "&::after": {
           content: '""',
@@ -152,6 +207,32 @@ export default function FieldMediaGallery() {
         "@keyframes pan": { to: { backgroundPosition: "0 100%" } },
       }}
     >
+      {/* Top-left Back button (md and up only) */}
+      {isMdUp && (
+        <Button
+          component="a"
+          href="#"
+          onClick={handleBack}
+          aria-label="Go back to previous page"
+          sx={(theme) => ({
+            position: "absolute",
+            top: {
+              xs: theme.spacing(2.5),
+              sm: theme.spacing(3),
+              md: theme.spacing(3),
+            },
+            left: {
+              xs: theme.spacing(2.5),
+              sm: theme.spacing(3),
+              md: theme.spacing(3),
+            },
+            ...backButtonBaseSx(theme),
+          })}
+        >
+          Back
+        </Button>
+      )}
+
       <Container>
         {/* Header */}
         <Stack
@@ -208,6 +289,42 @@ export default function FieldMediaGallery() {
           </Box>
         </Box>
       </Container>
+
+      {/* Sticky bottom Back button on xs/sm (hidden while lightbox is open) */}
+      {!isMdUp && openIdx < 0 && (
+        <Box
+          sx={{
+            position: "fixed",
+            left: 0,
+            right: 0,
+            bottom: 0,
+            zIndex: 1200,
+            p: { xs: 1.25, sm: 1.5 },
+            backdropFilter: "blur(6px)",
+            backgroundColor: "rgba(0,0,0,0.55)",
+            borderTop: "1px solid rgba(255,255,255,0.14)",
+          }}
+        >
+          <Button
+            component="a"
+            href="#"
+            onClick={handleBack}
+            aria-label="Go back to previous page"
+            fullWidth
+            sx={(theme) => ({
+              ...backButtonBaseSx(theme),
+              borderRadius: 1.5,
+              minHeight: 52,
+              "&:hover": {
+                ...backButtonBaseSx(theme)["&:hover"],
+                transform: "none",
+              },
+            })}
+          >
+            Back
+          </Button>
+        </Box>
+      )}
 
       {/* Lightbox */}
       <Modal open={openIdx >= 0} onClose={close}>
