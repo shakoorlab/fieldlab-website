@@ -145,7 +145,7 @@ export default function TechShowcase() {
               },
             }}
           >
-            {/* NEW: the swapping image layer. Fits inside the circle, responsive. */}
+            {/* Swapping image layer. Fits inside the circle, responsive. */}
             {center && (
               <Box
                 key={center.src}
@@ -158,7 +158,7 @@ export default function TechShowcase() {
                   width: "100%",
                   height: "100%",
                   objectFit: "contain",
-                  p: { xs: 2, sm: 2.5 }, // slight breathing room inside the circle
+                  p: { xs: 2, sm: 2.5 },
                   opacity: 0,
                   transform: "scale(0.985)",
                   animation: reduce ? "none" : "fadeIn 320ms ease forwards",
@@ -179,7 +179,8 @@ export default function TechShowcase() {
               title={it.title}
               blurb={it.blurb}
               reduce={reduce}
-              onClick={() => setActive(i)}
+              interactive={isSmUp} // 🔒 disable click at sm and below
+              onClick={isSmUp ? () => setActive(i) : undefined}
             />
           ))}
         </Box>
@@ -188,7 +189,15 @@ export default function TechShowcase() {
   );
 }
 
-function OrbitCard({ index, active, title, blurb, reduce, onClick }) {
+function OrbitCard({
+  index,
+  active,
+  title,
+  blurb,
+  reduce,
+  interactive,
+  onClick,
+}) {
   // precomputed orbit positions for 4 cards
   const POS = [
     { x: -240, y: -150 },
@@ -201,8 +210,13 @@ function OrbitCard({ index, active, title, blurb, reduce, onClick }) {
 
   return (
     <ButtonBase
-      onClick={onClick}
-      focusRipple
+      component={interactive ? "button" : "div"}
+      onClick={interactive ? onClick : undefined}
+      focusRipple={interactive}
+      disableRipple={!interactive}
+      disableTouchRipple={!interactive}
+      tabIndex={interactive ? 0 : -1}
+      aria-disabled={interactive ? undefined : true}
       sx={{
         position: { xs: "static", sm: "absolute" },
         left: { sm: "50%" },
@@ -223,10 +237,13 @@ function OrbitCard({ index, active, title, blurb, reduce, onClick }) {
         borderColor: active ? "#60ad5e" : "rgba(255,255,255,0.18)",
         mx: { xs: "auto", sm: 0 }, // center stacked cards
         mb: { xs: 2, sm: 0 }, // spacing between stacked cards
-        "&:hover": {
-          transform: { xs: "none", sm: `${transformSm} scale(1.02)` },
-          borderColor: "#60ad5e",
-        },
+        cursor: interactive ? "pointer" : "default",
+        ...(interactive && {
+          "&:hover": {
+            transform: { xs: "none", sm: `${transformSm} scale(1.02)` },
+            borderColor: "#60ad5e",
+          },
+        }),
       }}
     >
       <Stack spacing={0.75}>
