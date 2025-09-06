@@ -11,6 +11,9 @@ import {
 } from "@mui/material";
 import { useTheme } from "@mui/material/styles";
 
+// 👉 Use any image you like here:
+import HPIHero from "../../../assets/gallery/HPI/HPI1.webp";
+
 export default function HPIPanel() {
   const theme = useTheme();
   const reduce = useMediaQuery("(prefers-reduced-motion: reduce)");
@@ -77,7 +80,6 @@ export default function HPIPanel() {
           sx={(theme) => ({
             position: "absolute",
             zIndex: 2,
-
             top: {
               xs: theme.spacing(2.5),
               sm: theme.spacing(3),
@@ -88,12 +90,10 @@ export default function HPIPanel() {
               sm: theme.spacing(3),
               md: theme.spacing(3),
             },
-
             px: { xs: 1.5, sm: 2, md: 2.5 },
             py: { xs: 1, sm: 1, md: 1 },
             fontSize: { xs: 14, sm: 15, md: 16 },
             letterSpacing: { xs: "0.2px", sm: "0.3px", md: "0.3px" },
-
             color: "common.white",
             background:
               "linear-gradient(90deg, rgba(96,173,94,0.35) 0%, rgba(96,173,94,0.55) 100%)",
@@ -104,10 +104,8 @@ export default function HPIPanel() {
               ["transform", "box-shadow", "background-color", "border-color"],
               { duration: 250 }
             ),
-
             minHeight: 44,
             textAlign: "center",
-
             "&:hover": {
               background:
                 "linear-gradient(90deg, rgba(96,173,94,0.55) 0%, rgba(96,173,94,0.75) 100%)",
@@ -134,43 +132,92 @@ export default function HPIPanel() {
       )}
 
       <Container>
-        {/* Header */}
-        <Stack spacing={{ xs: 1, md: 1.5 }} sx={{ mb: { xs: 4, md: 6 } }}>
-          <Typography
-            variant="overline"
-            sx={{ letterSpacing: 2, opacity: 0.75 }}
-          >
-            Location · St. Charles, Missouri
-          </Typography>
-          <Header title="Genetic Diversity Field Trial" />
-          <Typography
+        {/* ===== Header + Side Image (equal height) ===== */}
+        <Box sx={{ mb: { xs: 4, md: 6 } }}>
+          <Box
             sx={{
-              opacity: 0.92,
-              maxWidth: 900,
-              animation: reduce ? "none" : "fadeUp .65s ease both",
-              "@keyframes fadeUp": {
-                from: { opacity: 0, transform: "translateY(6px)" },
+              display: "grid",
+              gridTemplateColumns: {
+                xs: "1fr",
+                md: "1fr minmax(320px, 40%)", // left text, right image
               },
+              gap: { xs: 0, md: 3 },
+              alignItems: "stretch",
             }}
           >
-            Our genetic diversity field trial spans <b>5 years</b> and includes{" "}
-            <b>344 varieties of sorghum</b>. This <b>13.5‑acre</b> experiment in{" "}
-            <b>St. Charles, MO</b> is managed by <b>expert farmers</b>.
-            Researchers take agronomic measurements such as <b>plant height</b>,{" "}
-            <b>lodging</b>, <b>flowering time</b>, and <b>biomass</b>. Digital
-            data is collected via <b>UAVs</b>, <b>LI‑COR instruments</b>, and{" "}
-            <b>environmental sensors</b>. The goal is to review year‑by‑year
-            data to find <b>trait patterns associated with specific genes</b>.
-            We’re interested in varieties with{" "}
-            <b>deeper, more robust root systems</b> that enhance{" "}
-            <b>carbon sequestration</b>. <b>Deep soil sampling</b> at the end of
-            the growing season provides data about <b>soil conditions</b> and{" "}
-            <b>root biomass</b>. Our research scientists will analyze this
-            extensive field dataset to gain new{" "}
-            <b>insights into sorghum genetics</b> and inform future{" "}
-            <b>sorghum breeding programs</b>.
-          </Typography>
-        </Stack>
+            {/* LEFT: Header content (unchanged) */}
+            <Stack spacing={{ xs: 1, md: 1.5 }}>
+              <Typography
+                variant="overline"
+                sx={{ letterSpacing: 2, opacity: 0.75 }}
+              >
+                Location · St. Charles, Missouri
+              </Typography>
+              <Header title="Genetic Diversity Field Trial" />
+              <Typography
+                sx={{
+                  opacity: 0.92,
+                  maxWidth: 900,
+                  animation: reduce ? "none" : "fadeUp .65s ease both",
+                  "@keyframes fadeUp": {
+                    from: { opacity: 0, transform: "translateY(6px)" },
+                  },
+                }}
+              >
+                Our genetic diversity field trial spans <b>5 years</b> and
+                includes <b>344 varieties of sorghum</b>. This <b>13.5-acre</b>{" "}
+                experiment in <b>St. Charles, MO</b> is managed by{" "}
+                <b>expert farmers</b>. Researchers take agronomic measurements
+                such as <b>plant height</b>, <b>lodging</b>,{" "}
+                <b>flowering time</b>, and <b>biomass</b>. Digital data is
+                collected via <b>UAVs</b>, <b>LI-COR instruments</b>, and{" "}
+                <b>environmental sensors</b>. The goal is to review year-by-year
+                data to find{" "}
+                <b>trait patterns associated with specific genes</b>. We’re
+                interested in varieties with{" "}
+                <b>deeper, more robust root systems</b> that enhance{" "}
+                <b>carbon sequestration</b>. <b>Deep soil sampling</b> at the
+                end of the growing season provides data about{" "}
+                <b>soil conditions</b> and <b>root biomass</b>. Our research
+                scientists will analyze this extensive field dataset to gain new{" "}
+                <b>insights into sorghum genetics</b> and inform future{" "}
+                <b>sorghum breeding programs</b>.
+              </Typography>
+            </Stack>
+
+            {/* RIGHT: Responsive image (renders only on md+) */}
+            {isMdUp && (
+              <Box
+                sx={{
+                  position: "relative",
+                  borderRadius: 2,
+                  overflow: "hidden",
+                  border: "1px solid rgba(255,255,255,0.18)",
+                  minHeight: 120, // safety floor to avoid tiny heights on edge cases
+                }}
+              >
+                <Box
+                  component="img"
+                  src={HPIHero}
+                  alt="Field trial overview"
+                  loading="lazy"
+                  decoding="async"
+                  sx={{
+                    position: "absolute",
+                    inset: 0,
+                    width: "100%",
+                    height: "100%",
+                    objectFit: "cover",
+                    display: "block",
+                    backgroundColor: "rgba(255,255,255,0.04)",
+                    border: "1px solid rgba(255,255,255,0.18)",
+                  }}
+                />
+              </Box>
+            )}
+          </Box>
+        </Box>
+        {/* ===== End Header + Side Image ===== */}
 
         {/* Top stats bar (responsive) */}
         <Box
