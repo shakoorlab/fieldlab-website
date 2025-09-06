@@ -8,6 +8,9 @@ import {
   Stack,
   Button,
   Slide,
+  IconButton,
+  Menu,
+  MenuItem,
 } from "@mui/material";
 
 import logoIcon from "../../assets/logo_icon.png";
@@ -56,7 +59,58 @@ const NavLink = ({ children, href = "/" }) => (
   </Button>
 );
 
+// Lightweight, dependency-free hamburger icon with an open/close state
+const HamburgerIcon = ({ open = false }) => (
+  <Box
+    aria-hidden
+    sx={{
+      position: "relative",
+      width: 22,
+      height: 16,
+      display: "inline-block",
+      "&::before, &::after, & > span": {
+        content: '""',
+        position: "absolute",
+        left: 0,
+        right: 0,
+        height: 2,
+        borderRadius: 1,
+        bgcolor: "common.white",
+        transition:
+          "transform 200ms ease, opacity 200ms ease, top 200ms ease, bottom 200ms ease",
+      },
+      "&::before": {
+        top: 0,
+        transform: open ? "translateY(7px) rotate(45deg)" : "none",
+      },
+      "&::after": {
+        bottom: 0,
+        transform: open ? "translateY(-7px) rotate(-45deg)" : "none",
+      },
+      "& > span": {
+        top: "7px",
+        opacity: open ? 0 : 1,
+      },
+    }}
+  >
+    <Box component="span" />
+  </Box>
+);
+
 export default function Navbar() {
+  const [menuAnchor, setMenuAnchor] = React.useState(null);
+  const menuOpen = Boolean(menuAnchor);
+
+  const openMenu = (e) => setMenuAnchor(e.currentTarget);
+  const closeMenu = () => setMenuAnchor(null);
+
+  const links = [
+    { label: "About", href: "/#next-section" },
+    { label: "Fields", href: "/#after-black-intro" },
+    { label: "Technology", href: "/#technology" },
+    { label: "Contact", href: "/#contact" },
+  ];
+
   return (
     <Container
       sx={{
@@ -68,6 +122,7 @@ export default function Navbar() {
       <HideOnScroll>
         <Box
           component="nav"
+          role="navigation"
           sx={{
             display: "flex",
             alignItems: "center",
@@ -110,9 +165,7 @@ export default function Navbar() {
                 height: "1.25em",
                 display: "block",
                 objectFit: "contain",
-                // optional subtle rounding for favicons that look harsh at tiny sizes
                 borderRadius: 0.5,
-                // make sure it still scales down at the tiniest screens
                 maxWidth: { xs: "1.3em", sm: "1.25em" },
                 maxHeight: { xs: "1.3em", sm: "1.25em" },
               }}
@@ -127,7 +180,6 @@ export default function Navbar() {
                 letterSpacing: 0.3,
                 userSelect: "none",
                 whiteSpace: "nowrap",
-                // Smoothly responsive: scales with viewport but stays within sensible bounds
                 fontSize: "clamp(14px, 2.2vw, 22px)",
                 lineHeight: 1.1,
               }}
@@ -136,11 +188,12 @@ export default function Navbar() {
             </Typography>
           </Box>
 
-          {/* Links */}
+          {/* Desktop links (md and up) */}
           <Stack
             direction="row"
             spacing={{ xs: 0.5, sm: 1 }}
             sx={{
+              display: { xs: "none", sm: "none", md: "flex" },
               flexWrap: "wrap",
               alignItems: "center",
               justifyContent: "flex-end",
@@ -148,11 +201,81 @@ export default function Navbar() {
               rowGap: { xs: 0.5, sm: 0.75 },
             }}
           >
-            <NavLink href="/#next-section">About</NavLink>
-            <NavLink href="/#after-black-intro">Fields</NavLink>
-            <NavLink href="/#technology">Technology</NavLink>
-            <NavLink href="/#contact">Contact</NavLink>
+            {links.map((l) => (
+              <NavLink key={l.href} href={l.href}>
+                {l.label}
+              </NavLink>
+            ))}
           </Stack>
+
+          {/* Mobile hamburger (sm and below) */}
+          <IconButton
+            aria-label="Open navigation menu"
+            aria-controls={menuOpen ? "navbar-menu" : undefined}
+            aria-haspopup="true"
+            aria-expanded={menuOpen ? "true" : undefined}
+            onClick={openMenu}
+            sx={{
+              display: { xs: "inline-flex", sm: "inline-flex", md: "none" },
+              ml: "auto",
+              color: "common.white",
+              p: 1,
+              borderRadius: 1.5,
+              "&:hover": { bgcolor: "rgba(255,255,255,0.08)" },
+            }}
+          >
+            <HamburgerIcon open={menuOpen} />
+          </IconButton>
+
+          <Menu
+            id="navbar-menu"
+            anchorEl={menuAnchor}
+            open={menuOpen}
+            onClose={closeMenu}
+            keepMounted
+            anchorOrigin={{ vertical: "bottom", horizontal: "right" }}
+            transformOrigin={{ vertical: "top", horizontal: "right" }}
+            PaperProps={{
+              elevation: 0,
+              sx: {
+                mt: 1,
+                borderRadius: "var(--radius)",
+                border: "1px solid rgba(255,255,255,0.6)",
+                background: "rgba(255,255,255,0.10)",
+                backdropFilter: "blur(10px)",
+                WebkitBackdropFilter: "blur(10px)",
+                boxShadow: "0 8px 24px rgba(0,0,0,0.15)",
+                color: "common.white",
+                minWidth: 200,
+                p: 0.5,
+              },
+            }}
+            MenuListProps={{
+              dense: true,
+              disablePadding: true,
+              sx: { p: 0.25 },
+            }}
+          >
+            {links.map((l) => (
+              <MenuItem
+                key={l.href}
+                component="a"
+                href={l.href}
+                onClick={closeMenu}
+                sx={{
+                  color: "common.white",
+                  fontWeight: 600,
+                  textTransform: "none",
+                  borderRadius: 1,
+                  px: 1.25,
+                  py: 1,
+                  "&:hover": { bgcolor: "rgba(255,255,255,0.08)" },
+                }}
+              >
+                {l.label}
+              </MenuItem>
+            ))}
+          </Menu>
         </Box>
       </HideOnScroll>
     </Container>
