@@ -11,6 +11,9 @@ import {
 } from "@mui/material";
 import { useTheme } from "@mui/material/styles";
 
+// 🔸 Adjust this path to your asset if needed
+import ClimateSmartHero from "../../../assets/gallery/CS/CS1.webp";
+
 export default function ClimateSmartPanel() {
   const theme = useTheme();
   const reduce = useMediaQuery("(prefers-reduced-motion: reduce)");
@@ -134,35 +137,86 @@ export default function ClimateSmartPanel() {
       )}
 
       <Container>
-        {/* Header */}
-        <Stack spacing={{ xs: 1, md: 1.5 }} sx={{ mb: { xs: 4, md: 6 } }}>
-          <Typography
-            variant="overline"
-            sx={{ letterSpacing: 2, opacity: 0.75 }}
-          >
-            Location · St. Charles, Missouri
-          </Typography>
-          <Header title="Climate Smart Field" />
-          <Typography
+        {/* ===== Header + Side Image (equal height; image only on md+) ===== */}
+        <Box sx={{ mb: { xs: 4, md: 6 } }}>
+          <Box
             sx={{
-              opacity: 0.92,
-              maxWidth: 900,
-              animation: reduce ? "none" : "fadeUp .65s ease both",
-              "@keyframes fadeUp": {
-                from: { opacity: 0, transform: "translateY(6px)" },
-              },
+              display: "grid",
+              gridTemplateColumns: { xs: "1fr", md: "1fr minmax(320px, 40%)" },
+              gap: { xs: 0, md: 3 },
+              alignItems: "stretch",
             }}
           >
-            Funded by the National Sorghum Producers Climate Smart grant, this
-            five-year field trial compares <b>two commercial sorghum hybrids</b>{" "}
-            with <b>maize</b> under different management practices. A
-            conventional control uses <b>tilling</b>, <b>standard nitrogen</b>,
-            and <b>no cover crop</b>. Most fields are combinations of
-            conventional practices with more sustainable options: <b>no-till</b>
-            , <b>precision nitrogen</b>, or <b>legume cover crop</b>. One field
-            applies only the sustainable practices.
-          </Typography>
-        </Stack>
+            {/* LEFT: Header content (unchanged descriptions) */}
+            <Stack spacing={{ xs: 1, md: 1.5 }}>
+              <Typography
+                variant="overline"
+                sx={{ letterSpacing: 2, opacity: 0.75 }}
+              >
+                Location · St. Charles, Missouri
+              </Typography>
+              <Header title="Climate Smart Field" />
+              <Typography
+                sx={{
+                  opacity: 0.92,
+                  maxWidth: 900,
+                  animation: reduce ? "none" : "fadeUp .65s ease both",
+                  "@keyframes fadeUp": {
+                    from: { opacity: 0, transform: "translateY(6px)" },
+                  },
+                }}
+              >
+                Funded by the National Sorghum Producers Climate Smart grant,
+                this five-year field trial compares{" "}
+                <b>two commercial sorghum hybrids</b> with <b>maize</b> under
+                different management practices. A conventional control uses{" "}
+                <b>tilling</b>, <b>standard nitrogen</b>, and{" "}
+                <b>no cover crop</b>. Most fields are combinations of
+                conventional practices with more sustainable options:{" "}
+                <b>no-till</b> (planting into last season’s residue without
+                plowing or disking to keep soil undisturbed),{" "}
+                <b>precision nitrogen</b> (applying nitrogen fertilizer at the
+                right rate, place, and time for each field/zone based on tests
+                or sensor/yield data), or a <b>legume cover crop</b> (sowing
+                non-harvested legumes, like clover or vetch, between cash crops
+                to biologically fix nitrogen, protect and build soil, and
+                suppress weeds). One field applies only the sustainable
+                practices.
+              </Typography>
+            </Stack>
+
+            {/* RIGHT: Responsive image (renders only on md+) */}
+            {isMdUp && (
+              <Box
+                sx={{
+                  position: "relative",
+                  borderRadius: 2,
+                  overflow: "hidden",
+                  border: "1px solid rgba(255,255,255,0.18)",
+                  minHeight: 120,
+                }}
+              >
+                <Box
+                  component="img"
+                  src={ClimateSmartHero}
+                  alt="Climate Smart field overview"
+                  loading="lazy"
+                  decoding="async"
+                  sx={{
+                    position: "absolute",
+                    inset: 0,
+                    width: "100%",
+                    height: "100%",
+                    objectFit: "cover",
+                    display: "block",
+                    backgroundColor: "rgba(255,255,255,0.04)",
+                  }}
+                />
+              </Box>
+            )}
+          </Box>
+        </Box>
+        {/* ===== End Header + Side Image ===== */}
 
         {/* Top stats bar (responsive) */}
         <Box
